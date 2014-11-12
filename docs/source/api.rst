@@ -5,9 +5,9 @@ API
 Authentication
 ==============
 
-Every Acotel Baclklist API uses a simple token-based HTTP Authentication scheme.
+The Acotel Baclklist APIs use a simple token-based HTTP Authentication scheme.
 
-For applications to authenticate, the token key should be included in the Authorization HTTP 
+For client applications to authenticate, the token key should be included in the Authorization HTTP 
 header. The key should be prefixed by the string literal "Token", with whitespace separating the 
 two strings. For example:::
 
@@ -24,8 +24,8 @@ Requests with invalid token will also result in a HTTP 403 Forbidden response:::
 Generating Tokens
 -----------------
 
-To allow your application to interact with the available APIs, a user/token must be created on the
-Admin Interface.
+To allow a client application to interact with the APIs, admin must create a user/token for the 
+this application on the Admin Interface.
 
 Memcached
 =========
@@ -33,24 +33,22 @@ Memcached
 Memcached is a high-performance, distributed memory object caching system intended for use in 
 speeding up dynamic web applications by alleviating database load.
 
-All the APIs use Memcached in order to improve performance.
+The Acotel Blacklist APIs use Memcached in order to improve performance:
 
-Every request check if cache key "blacklist" exists. If so, the results from the cache are used, 
-otherwise results are retrieved from the database and set on the cache for the next request.
+.. image:: _static/flow_memcached.png
 
-When deleting a customer (by Delete API or Admin Interface), this key is deleted and recreated in
-the next request.
+When deleting a customer (using the Delete API or the Admin Interface), this cache is deleted
+and recreated on the next request.
 
-Available APIs
-==============
+Actions
+=======
 
-List Customers API
-------------------
+List Customers
+--------------
 
-The Acotel Blacklist List API allows client applications to view all the customers currently 
-blacklisted (status = ACTIVE):
+This action allows client applications to view all the customers currently blacklisted:
    
-**Method**::
+**HTTP Method**::
     
     GET
 
@@ -62,29 +60,26 @@ blacklisted (status = ACTIVE):
 
     {
         "count": 3, 
-        "next": null, 
+        "next": "http://localhost:8000/customers/?page=2", 
         "previous": null, 
         "results": [
             {
-                "id": 2, 
-                "url": "http://localhost:8000/customers/2/", 
-                "msisdn": 21981211250, 
-                "date_inserted": "2014-11-10T19:32:27.342Z"
+                "id": 18, 
+                "url": "http://localhost:8000/customers/21981520010", 
+                "msisdn": 21981520010, 
+                "date_inserted": "2014-11-12T13:02:09.078Z"
             }, 
             {
-                "id": 1, 
-                "url": "http://localhost:8000/customers/1/", 
-                "msisdn": 21981527318, 
-                "date_inserted": "2014-11-10T19:29:12.664Z"
-            }, 
-            {
-                "id": 3, 
-                "url": "http://localhost:8000/customers/3/", 
-                "msisdn": 21981279218, 
-                "date_inserted": "2014-11-11T14:28:00.635Z"
+                "id": 17, 
+                "url": "http://localhost:8000/customers/21981520009", 
+                "msisdn": 21981520009, 
+                "date_inserted": "2014-11-12T13:02:03.765Z"
             }
-        ]
     }
+
+**Expected HTTP Code**::
+
+    200 OK
 
 The curl command line tool may be useful for testing token authenticated APIs. For example:::
 
@@ -99,47 +94,39 @@ Client applications can paginate the results using a query parameter "page". For
 The number of items per page defaults to 10. Client applicatios can override this number using 
 "?page_size=x"
 
-**Filtering**
+Retrieve Customer
+-----------------
 
-Client applications can also restrict the items that are returned. A common scenario is checking 
-if a specific customer is blacklisted. For example:::
+This action allows client applications to view information for a specific customer:
 
-    http://localhost:8000/customers?msisdn=21981527318
-
-If "count" is greater than zero than the searched customer is blacklisted.
-
-Retrieve Customer API
----------------------
-
-The Acotel Blacklist Detail API allows client applications to view information for a specific 
-customer:
-
-**Method**::
+**HTTP Method**::
     
     GET
 
 **URL**::
     
-    http://localhost:8000/customers/1/
+    http://localhost:8000/customers/21981520010"
 
 **Response content**::
 
-    [
-        {
-            "id": 1, 
-            "url": "http://localhost:8000/customers/1/", 
-            "msisdn": 21981527318, 
-            "date_inserted": "2014-11-10T19:29:12.664Z"
-        }
-    ]
+    {
+        "id": 18, 
+        "url": "http://localhost:8000/customers/21981520010", 
+        "msisdn": 21981520010, 
+        "date_inserted": "2014-11-12T13:02:09.078Z"
+    }
 
-Delete Customer API
--------------------
+**Expected HTTP Code**::
 
-The Acotel Blacklist Delete API allows client applications to delete (status = DELETED) a 
-specific customer:
+    200 OK          - when customer exists;
+    404 NOT FOUND   - when customer does not exist.
 
-**Method**::
+Delete Customer
+---------------
+
+This action allows client applications to delete a specific customer:
+
+**HTTP Method**::
     
     DELETE
 
@@ -151,10 +138,14 @@ specific customer:
 
     # empty
 
+**Expected HTTP Code**::
+
+    204 NO CONTENT
+
 Browsable API
 =============
 
-API may stand for Application Programming Interface, but humans have to be able to read the APIs,
-too; someone has to do the programming. The Acotel Blacklist supports generating human-friendly
-HTML output for each resource when the HTML format is requested. These pages allow for easy
-browsing of resources.
+The Acotel Blacklist supports generating human-friendly HTML output for each resource when the 
+HTML format is requested. These pages allow for easy browsing of resources.
+
+To see it in action just access the APIs using a browser.

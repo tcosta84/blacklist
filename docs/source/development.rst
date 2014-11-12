@@ -3,7 +3,7 @@ Development
 
 To start developing on Acotel Blacklist, first clone the repo:::
 
-    git clone git@github.com:tomchristie/django-rest-framework.git
+    git clone ssh://git@stash.acotelbrasil.com.br:7999/blist/blacklist.git
 
 Changes should broadly follow the PEP 8 style conventions, and we recommend you setup your 
 editor to automatically indicated non-conforming styles.
@@ -15,7 +15,7 @@ To setup the application, clone the repository, and then:::
 
     virtualenv env
     source env/bin/activate
-    pip install -r requirements.txt
+    pip install -r requirements.pip
 
 Testing
 #######
