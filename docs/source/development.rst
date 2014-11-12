@@ -20,17 +20,11 @@ To setup the application, clone the repository, and then:::
 Testing
 #######
 
-To run the tests, clone the repository, and then:::
+To run the tests, clone the repository, setup the application and then:::
 
     ./manage.py test
 
 Deploy
 ######
 
-To deploy your changes to staging:::
-
-    fab staging deploy
-
-To deploy your changes to production:::
-
-    fab prod deploy
+ToDo
