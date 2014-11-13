@@ -85,9 +85,9 @@ This action allows client applications to view all the customers currently black
 
     200 OK
 
-The curl command line tool may be useful for testing token authenticated APIs. For example:::
+Example using curl command line tool:::
 
-    curl -X GET http://127.0.0.1:8000/api/example/ -H 'Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b'
+    curl -X GET http://127.0.0.1:8000/customers/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Accept: application/json; indent=4'
 
 **Pagination**
 
@@ -136,6 +136,10 @@ This action allows client applications to add new customers to the blacklist:
     201 CREATED         - customer created successfully
     404 BAD REQUEST     - customer was not created
 
+Example using curl command line tool:::
+
+    curl -X POST http://127.0.0.1:8000/customers/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Content-type: application/json' -d '{"msisdn": 21981520000}' curl -X DELETE http://127.0.0.1:8000/customers/21981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Accept: application/json; indent=4'
+
 Retrieve Customer
 -----------------
 
@@ -167,6 +171,10 @@ This action allows client applications to view information for a specific custom
     200 OK          - customer exists;
     404 NOT FOUND   - customer does not exist.
 
+Example using curl command line tool:::
+
+    curl -X GET http://127.0.0.1:8000/customers/21981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Accept: application/json; indent=4'
+
 Delete Customer
 ---------------
 
@@ -191,6 +199,10 @@ This action allows client applications to delete a specific customer:
 **Expected HTTP Code**::
 
     204 NO CONTENT
+    
+Example using curl command line tool:::
+
+    curl -X DELETE http://127.0.0.1:8000/customers/21981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3'
 
 Browsable API
 =============
