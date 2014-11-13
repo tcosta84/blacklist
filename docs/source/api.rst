@@ -138,7 +138,7 @@ This action allows client applications to add new customers to the blacklist:
 
 Example using curl command line tool:::
 
-    curl -X POST http://127.0.0.1:8000/customers/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Content-type: application/json' -d '{"msisdn": 21981520000}' curl -X DELETE http://127.0.0.1:8000/customers/21981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Accept: application/json; indent=4'
+    curl -X POST http://127.0.0.1:8000/customers/ -d '{"msisdn": 21981520000}' -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Content-type: application/json' -H 'Accept: application/json; indent=4'
 
 Retrieve Customer
 -----------------
