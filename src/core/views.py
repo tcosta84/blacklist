@@ -31,7 +31,8 @@ class MemcachedMixin(object):
 
 class CustomerListCreateView(MemcachedMixin, APIView):
     """
-    Allows client applications to retrieve all customers currently blacklisted
+    Allows client applications to list all customers currently blacklisted and also add new
+    customers to the blacklist
     """
 
     def get(self, request, *args, **kwargs):
@@ -80,7 +81,7 @@ class CustomerListCreateView(MemcachedMixin, APIView):
 
 class CustomerRetrieveDestroyView(MemcachedMixin, APIView):
     """
-    Allows client applications to retrieve and delete a customer by its MSISDN
+    Allows client applications to retrieve and delete a specific customer by its MSISDN
     """
     def get(self, request, *args, **kwargs):
         logger.info('Detail API')
