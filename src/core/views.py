@@ -20,7 +20,7 @@ class MemcachedMixin(object):
             logger.info('Blacklist is not cached. Retrieving updated blacklist to set cache ...')
             data = models.Customer.objects.filter(
                 status=models.Customer.STATUS_ACTIVE
-            ).order_by('-date_inserted')
+            ).select_related().order_by('-date_inserted')
 
             logger.info('Setting cache ...')
             cache.set('blacklist', data)
@@ -29,15 +29,12 @@ class MemcachedMixin(object):
         return super(MemcachedMixin, self).dispatch(request, *args, **kwargs)
 
 
-class RootAPI(MemcachedMixin, APIView):
-    pass
-
-
-class CustomerListView(MemcachedMixin, APIView):
+class CustomerListCreateView(MemcachedMixin, APIView):
     """
     Allows client applications to retrieve all customers currently blacklisted
     """
-    def get(self, request):
+
+    def get(self, request, *args, **kwargs):
         logger.info('List API')
         logger.info('User: %s' % (request.user, ))
 
@@ -56,20 +53,41 @@ class CustomerListView(MemcachedMixin, APIView):
             page_content = paginator.page(paginator.num_pages)
 
         serializer = serializers.PaginatedCustomerSerializer(
-            page_content, 
+            page_content,
             context={'request': request}
         )
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def post(self, request, *args, **kwargs):
+        logger.info('Create API')
+        logger.info('User: %s' % (request.user, ))
 
-class CustomerDetailView(MemcachedMixin, APIView):
+        serializer = serializers.CustomerSerializer(data=request.DATA)
+        if serializer.is_valid():
+            customer = models.Customer.objects.create(
+                msisdn=serializer.object.msisdn,
+                created_by=request.user
+            )
+            serializer = serializers.CustomerSerializer(
+                customer,
+                context={'request': request}
+            )
+            cache.delete('blacklist')
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomerRetrieveDestroyView(MemcachedMixin, APIView):
     """
     Allows client applications to retrieve and delete a customer by its MSISDN
     """
-    def get(self, request, msisdn):
+    def get(self, request, *args, **kwargs):
         logger.info('Detail API')
         logger.info('User: %s' % (request.user, ))
+
+        msisdn = kwargs['msisdn']
+
         logger.info('Retrieving customer info (customer id: %s) ...' % (msisdn,))
 
         queryset = [customer for customer in self.queryset if customer.msisdn == int(msisdn)]
@@ -81,9 +99,12 @@ class CustomerDetailView(MemcachedMixin, APIView):
         except IndexError:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, msisdn):
+    def delete(self, request, *args, **kwargs):
         logger.info('Delete API')
         logger.info('User: %s' % (request.user, ))
+
+        msisdn = kwargs['msisdn']
+
         logger.info('Updating customer status (customer id: %s) ...' % (msisdn,))
 
         models.Customer.objects.filter(

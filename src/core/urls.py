@@ -7,12 +7,12 @@ urlpatterns = patterns(
     '',
     url(
         r'^customers/?$',
-        views.CustomerListView.as_view(),
+        views.CustomerListCreateView.as_view(),
         name='customer-list'
     ),
     url(
         r'^customers/(?P<msisdn>\d+)/?',
-        views.CustomerDetailView.as_view(),
+        views.CustomerRetrieveDestroyView.as_view(),
         name='customer-detail'
     ),
 )

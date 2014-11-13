@@ -1,17 +1,19 @@
 from django.contrib import admin
+from django.core.cache import cache
 
 from core import models
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('msisdn', 'status', 'created_by', 'deleted_by', 'date_inserted', 
-            'date_updated', )
+    list_display = ('msisdn', 'status', 'created_by', 'deleted_by',
+            'date_inserted', 'date_updated', )
     search_fields = ('msisdn', )
     readonly_fields = ['created_by', 'deleted_by', ]
 
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
+        cache.delete('blacklist')
         obj.save()
 
 admin.site.disable_action('delete_selected')
