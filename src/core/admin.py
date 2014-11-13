@@ -1,14 +1,16 @@
 from django.contrib import admin
 from django.core.cache import cache
 
+from simple_history.admin import SimpleHistoryAdmin
+
 from core import models
 
 
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('msisdn', 'status', 'created_by', 'deleted_by',
-            'date_inserted', 'date_updated', )
+class CustomerAdmin(SimpleHistoryAdmin):
+    list_display = ('msisdn', 'created_by', 'date_inserted')
     search_fields = ('msisdn', )
-    readonly_fields = ['created_by', 'deleted_by', ]
+    readonly_fields = ['created_by']
+    actions = ['delete_selected']
 
     def save_model(self, request, obj, form, change):
         if not change:

@@ -141,8 +141,8 @@ class TestDeleteCustomer(TestCase):
         self.client.force_authenticate(user=self.user)
 
     @freeze_time('2014-11-10 13:00:00')
-    def test_update_status_instead_of_deleting(self):
-        customer = models.Customer.objects.create(msisdn=self.msisdn, created_by=self.user)
+    def test_delete(self):
+        models.Customer.objects.create(msisdn=self.msisdn, created_by=self.user)
 
         response = self.client.delete(
             reverse(
@@ -154,5 +154,5 @@ class TestDeleteCustomer(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(response.content, '')
 
-        updated_customer = models.Customer.objects.get(pk=customer.pk)
-        self.assertEqual(updated_customer.status, models.Customer.STATUS_DELETED)
+        with self.assertRaises(models.Customer.DoesNotExist):
+            models.Customer.objects.get(msisdn=self.msisdn)

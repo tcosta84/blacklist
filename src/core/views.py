@@ -18,9 +18,7 @@ class MemcachedMixin(object):
         data = cache.get('blacklist')
         if data is None:
             logger.info('Blacklist is not cached. Retrieving updated blacklist to set cache ...')
-            data = models.Customer.objects.filter(
-                status=models.Customer.STATUS_ACTIVE
-            ).select_related().order_by('-date_inserted')
+            data = models.Customer.objects.all().select_related().order_by('-date_inserted')
 
             logger.info('Setting cache ...')
             cache.set('blacklist', data)
@@ -108,13 +106,7 @@ class CustomerRetrieveDestroyView(MemcachedMixin, APIView):
 
         logger.info('Updating customer status (customer id: %s) ...' % (msisdn,))
 
-        models.Customer.objects.filter(
-            msisdn=msisdn,
-            status=models.Customer.STATUS_ACTIVE
-        ).update(
-            status=models.Customer.STATUS_DELETED,
-            deleted_by=request.user
-        )
+        models.Customer.objects.filter(msisdn=msisdn).delete()
 
         logger.info('Deleting blacklist from memcached ...')
         cache.delete('blacklist')

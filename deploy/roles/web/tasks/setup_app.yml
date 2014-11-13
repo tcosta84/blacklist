@@ -31,7 +31,7 @@
 - name: Compile docs
   sudo: yes
   sudo_user: "{{ app_user }}"
-  shell: cd {{ source_dir }}/docs/ && make html
+  shell: cd {{ source_dir }}/docs/ && {{ virtualenv_dir }}/bin/sphinx-build -b html source/ build/
 
 - name: Run database migrations
   sudo: yes
