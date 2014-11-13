@@ -56,6 +56,10 @@ This action allows client applications to view all the customers currently black
 
     http://localhost:8000/customers
 
+**Required headers**::
+
+    Authorization: Token {application_token}
+
 **Response**::
 
     {
@@ -94,6 +98,44 @@ Client applications can paginate the results using a query parameter "page". For
 The number of items per page defaults to 10. Client applicatios can override this number using 
 "?page_size=x"
 
+Create Customers
+----------------
+
+This action allows client applications to add new customers to the blacklist:
+   
+**HTTP Method**::
+    
+    POST
+
+**URL**::
+
+    http://localhost:8000/customers
+
+**Required headers**::
+
+    Authorization: Token {application_token}
+    Content-type: application/json
+
+**Request**::
+
+        {
+            "msisdn": 21981520011
+        }
+
+**Response**::
+
+        {
+            "id": 19, 
+            "url": "http://localhost:8000/customers/21981520011", 
+            "msisdn": 21981520011, 
+            "date_inserted": "2014-11-12T13:02:09.078Z"
+        } 
+
+**Expected HTTP Code**::
+
+    201 CREATED         - customer created successfully
+    404 BAD REQUEST     - customer was not created
+
 Retrieve Customer
 -----------------
 
@@ -107,6 +149,10 @@ This action allows client applications to view information for a specific custom
     
     http://localhost:8000/customers/21981520010"
 
+**Required headers**::
+
+    Authorization: Token {application_token}
+
 **Response content**::
 
     {
@@ -118,8 +164,8 @@ This action allows client applications to view information for a specific custom
 
 **Expected HTTP Code**::
 
-    200 OK          - when customer exists;
-    404 NOT FOUND   - when customer does not exist.
+    200 OK          - customer exists;
+    404 NOT FOUND   - customer does not exist.
 
 Delete Customer
 ---------------
@@ -133,6 +179,10 @@ This action allows client applications to delete a specific customer:
 **URL**::
     
     http://localhost:8000/customers/1/
+
+**Required headers**::
+
+    Authorization: Token {application_token}
 
 **Response content**::
 
