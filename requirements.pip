@@ -11,3 +11,4 @@ flake8==2.2.5
 freezegun==0.2.2
 ipdb==0.8
 ipython==2.3.0
+python-decouple

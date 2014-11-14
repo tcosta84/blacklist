@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from decouple import config
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 
@@ -19,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 TEMPLATE_DEBUG = True
 
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'blacklist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 import dj_database_url
-DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
+DATABASES = {'default': dj_database_url.config(default=config('DATABASE_URL'))}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -102,8 +103,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.environ['STATIC_ROOT']
-MEDIA_ROOT = os.environ['MEDIA_ROOT']
+STATIC_ROOT = config('STATIC_ROOT')
+MEDIA_ROOT = config('MEDIA_ROOT')
 
 # Template
 
@@ -135,13 +136,13 @@ REST_FRAMEWORK = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': os.environ['MEMCACHED_LOCATION'],
+        'LOCATION': config('MEMCACHED_LOCATION'),
     }
 }
 
 # Logging
 
-LOGGING_ROOT = os.environ['LOGGING_ROOT']
+LOGGING_ROOT = config('LOGGING_ROOT')
 
 LOGGING = {
     'version': 1,
