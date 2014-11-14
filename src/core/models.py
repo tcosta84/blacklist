@@ -4,15 +4,6 @@ from django.contrib.auth.models import User
 from core import validators
 
 
-class CustomerBase(models.Model):
-    msisdn = models.BigIntegerField(unique=True, validators=[validators.validate_msisdn])
-    created_by = models.ForeignKey(User, editable=False)
-    date_inserted = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        abstract = True
-
-
 class Customer(models.Model):
     msisdn = models.BigIntegerField(unique=True, validators=[validators.validate_msisdn])
     created_by = models.ForeignKey(User, related_name='created_by', editable=False)
