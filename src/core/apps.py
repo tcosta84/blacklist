@@ -6,5 +6,4 @@ class MyAppConfig(AppConfig):
     verbose_name = 'Acotel Blacklist'
 
     def ready(self):
-        # import signal handlers
-        import core.signals.handlers
+        pass
