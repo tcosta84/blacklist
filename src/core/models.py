@@ -1,9 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from simple_history.models import HistoricalRecords
-
 from core import validators
+
+
+class CustomerBase(models.Model):
+    msisdn = models.BigIntegerField(unique=True, validators=[validators.validate_msisdn])
+    created_by = models.ForeignKey(User, editable=False)
+    date_inserted = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
 
 
 class Customer(models.Model):
@@ -11,11 +18,31 @@ class Customer(models.Model):
     created_by = models.ForeignKey(User, related_name='created_by', editable=False)
     date_inserted = models.DateTimeField(auto_now_add=True)
 
-    history = HistoricalRecords()
-
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Customer, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return '%s' % (self.msisdn, )
+
+
+class CustomerHistory(models.Model):
+    ACTION_CREATE = 1
+    ACTION_DELETE = -1
+    ACTION_CHOICES = (
+        (ACTION_CREATE, 'Create'),
+        (ACTION_DELETE, 'Delete')
+    )
+
+    msisdn = models.BigIntegerField()
+    created_by = models.ForeignKey(User, related_name='history_created_by', editable=False)
+    date_inserted = models.DateTimeField()
+    action = models.SmallIntegerField(choices=ACTION_CHOICES)
+    history_changed_by = models.ForeignKey(User)
+    history_date_inserted = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return '%s' % (self.id, )
+
+    class Meta:
+        verbose_name_plural = 'Customer Histories'

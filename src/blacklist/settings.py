@@ -40,7 +40,6 @@ MANAGERS = (
 
 INSTALLED_APPS = (
     'suit',
-    'simple_history',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -72,7 +71,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.ExtraRequestMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware'
 )
 
 ROOT_URLCONF = 'blacklist.urls'
@@ -179,4 +177,8 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Acotel Blacklist'
 }

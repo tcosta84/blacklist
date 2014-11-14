@@ -106,7 +106,15 @@ class CustomerRetrieveDestroyView(MemcachedMixin, APIView):
 
         logger.info('Updating customer status (customer id: %s) ...' % (msisdn,))
 
-        models.Customer.objects.filter(msisdn=msisdn).delete()
+        customer = models.Customer.objects.get(msisdn=msisdn)
+        customer.delete()
+        models.CustomerHistory.objects.create(
+            msisdn=customer.msisdn,
+            created_by=customer.created_by,
+            date_inserted=customer.date_inserted,
+            action=models.CustomerHistory.ACTION_DELETE,
+            history_changed_by=request.user
+        )
 
         logger.info('Deleting blacklist from memcached ...')
         cache.delete('blacklist')
