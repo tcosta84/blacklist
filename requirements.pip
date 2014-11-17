@@ -12,3 +12,4 @@ freezegun==0.2.2
 ipdb==0.8
 ipython==2.3.0
 python-decouple
+mock==1.0.1
