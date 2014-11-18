@@ -204,7 +204,7 @@ BROKER_URL = config('RABBITMQ_URL')
 CELERYBEAT_SCHEDULE = {
     'populate_memcached': {
         'task': 'core.tasks.populate_memcached',
-        'schedule': crontab(minute='*/1'),  # Every 10 minutes
+        'schedule': crontab(minute='*/30'),  # Every 30 minutes
         'args': (),
     },
 }
