@@ -29,7 +29,7 @@ class CustomerListCreateView(APIView):
         if not page_size:
             page_size = settings.REST_FRAMEWORK['PAGINATE_BY']
 
-        queryset = models.Customer.objects.all()
+        queryset = models.Customer.objects.select_related().all()
 
         paginator = Paginator(queryset, page_size)
         try:
@@ -77,10 +77,21 @@ class CustomerRetrieveDestroyView(APIView):
         msisdn = kwargs['msisdn']
 
         logger.info('Retrieving customer from cache ...')
+
+        cache_up = cache.get('live')
+        if not cache_up:
+            try:
+                customer = models.Customer.objects.select_related().get(msisdn=msisdn)
+                serializer = serializers.CustomerSerializer(customer, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except models.Customer.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
         customer = cache.get(msisdn)
         if customer:
             serializer = serializers.CustomerSerializer(customer, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response('', status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
