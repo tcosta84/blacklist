@@ -42,10 +42,8 @@ def retrieve_customers():
 def populate_memcached():
     cache_is_live = cache.get('live')
     if cache_is_live:
-        print 'Cache is live!'
         logging.info('Cache is live')
     else:
-        print 'Cache is not live!'
         logging.info('Cache is not live')
         retrieve_customers()
         set_cache_is_live()
