@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from celery.schedules import crontab
 from decouple import config
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
@@ -165,6 +166,13 @@ LOGGING = {
             'formatter': 'standard',
             'filters': ['core_filter'],
         },
+        'file_tasks': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': LOGGING_ROOT + '/celery.log',
+            'formatter': 'standard',
+            'filters': ['core_filter'],
+        },
     },
     'loggers': {
         'django.request': {
@@ -177,9 +185,26 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'core.tasks': {
+            'handlers': ['file_tasks'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     },
 }
 
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Acotel Blacklist'
+}
+
+# Celery Beat
+
+BROKER_URL = config('RABBITMQ_URL')
+
+CELERYBEAT_SCHEDULE = {
+    'populate_memcached': {
+        'task': 'core.tasks.populate_memcached',
+        'schedule': crontab(minute='*/1'),  # Every 10 minutes
+        'args': (),
+    },
 }
