@@ -46,7 +46,6 @@ class TestListCustomers(TestCase):
     @freeze_time('2014-11-10 13:00:00')
     def test_list(self):
         models.Customer.objects.create(msisdn=self.msisdn, created_by=self.user)
-        cache.delete('blacklist')
 
         response = self.client.get(reverse('customer-list'))
 

@@ -13,7 +13,6 @@ class CustomerAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
-        cache.delete('blacklist')
         obj.save()
         cache.set(str(obj.msisdn), obj, None)
 
