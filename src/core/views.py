@@ -82,7 +82,6 @@ class CustomerRetrieveDestroyView(APIView):
         if customer:
             serializer = serializers.CustomerSerializer(customer, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response('', status=status.HTTP_200_OK)
         else:
             cache_up = cache.get('live')
             if not cache_up:
