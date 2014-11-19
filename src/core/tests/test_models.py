@@ -15,6 +15,11 @@ class TestCustomer(TestCase):
             models.Customer.objects.create(msisdn=msisdn, created_by=self.user)
 
     def test_error_when_msisdn_doesnot_start_with_55(self):
-        msisdn = 992181527318
+        msisdn = 9921981527318
         with self.assertRaisesRegexp(ValidationError, 'MSISDN must start with 55'):
+            models.Customer.objects.create(msisdn=msisdn, created_by=self.user)
+
+    def test_error_when_msisdn_has_more_than_13_digits(self):
+        msisdn = 55219815273188
+        with self.assertRaisesRegexp(ValidationError, 'MSISDN must have 12 or 13 digits. Given: 14'):
             models.Customer.objects.create(msisdn=msisdn, created_by=self.user)
