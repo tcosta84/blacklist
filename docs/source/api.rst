@@ -73,14 +73,14 @@ This action allows client applications to view all the customers currently black
         "results": [
             {
                 "id": 18, 
-                "url": "http://localhost:8000/customers/21981520010", 
-                "msisdn": 21981520010, 
+                "url": "http://localhost:8000/customers/5521981520010", 
+                "msisdn": 5521981520010, 
                 "date_inserted": "2014-11-12T13:02:09.078Z"
             }, 
             {
                 "id": 17, 
-                "url": "http://localhost:8000/customers/21981520009", 
-                "msisdn": 21981520009, 
+                "url": "http://localhost:8000/customers/5521981520009", 
+                "msisdn": 5521981520009, 
                 "date_inserted": "2014-11-12T13:02:03.765Z"
             }
     }
@@ -123,15 +123,15 @@ This action allows client applications to add new customers to the blacklist:
 **Request**::
 
         {
-            "msisdn": 21981520011
+            "msisdn": 5521981520011
         }
 
 **Response**::
 
         {
             "id": 19, 
-            "url": "http://localhost:8000/customers/21981520011", 
-            "msisdn": 21981520011, 
+            "url": "http://localhost:8000/customers/5521981520011", 
+            "msisdn": 5521981520011, 
             "date_inserted": "2014-11-12T13:02:09.078Z"
         } 
 
@@ -142,7 +142,7 @@ This action allows client applications to add new customers to the blacklist:
 
 Example using curl command line tool:::
 
-    curl -X POST http://127.0.0.1:8000/customers/ -d '{"msisdn": 21981520000}' -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Content-type: application/json' -H 'Accept: application/json; indent=4'
+    curl -X POST http://127.0.0.1:8000/customers/ -d '{"msisdn": 5521981520000}' -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Content-type: application/json' -H 'Accept: application/json; indent=4'
 
 Retrieve Customer
 -----------------
@@ -155,7 +155,7 @@ This action allows client applications to view information for a specific custom
 
 **URL**::
     
-    http://localhost:8000/customers/21981520010"
+    http://localhost:8000/customers/5521981520010"
 
 **Required headers**::
 
@@ -165,8 +165,8 @@ This action allows client applications to view information for a specific custom
 
     {
         "id": 18, 
-        "url": "http://localhost:8000/customers/21981520010", 
-        "msisdn": 21981520010, 
+        "url": "http://localhost:8000/customers/5521981520010", 
+        "msisdn": 5521981520010, 
         "date_inserted": "2014-11-12T13:02:09.078Z"
     }
 
@@ -177,7 +177,7 @@ This action allows client applications to view information for a specific custom
 
 Example using curl command line tool:::
 
-    curl -X GET http://127.0.0.1:8000/customers/21981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Accept: application/json; indent=4'
+    curl -X GET http://127.0.0.1:8000/customers/5521981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3' -H 'Accept: application/json; indent=4'
 
 Delete Customer
 ---------------
@@ -206,7 +206,7 @@ This action allows client applications to delete a specific customer:
     
 Example using curl command line tool:::
 
-    curl -X DELETE http://127.0.0.1:8000/customers/21981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3'
+    curl -X DELETE http://127.0.0.1:8000/customers/5521981520000/ -H 'Authorization: Token 7455bfd68d00537c319d7e793a8ad4eb266ec9e3'
 
 Browsable API
 =============

@@ -13,7 +13,7 @@ from core import models
 
 class TestFull(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -38,7 +38,7 @@ class TestFull(TestCase):
 
 class TestListCustomers(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -66,7 +66,7 @@ class TestListCustomers(TestCase):
 
 class TestRetrieveCustomer(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -100,7 +100,7 @@ class TestRetrieveCustomer(TestCase):
 
 class TestCreateCustomer(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -135,7 +135,7 @@ class TestCreateCustomer(TestCase):
 
 class TestDeleteCustomer(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
