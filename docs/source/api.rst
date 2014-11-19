@@ -33,12 +33,16 @@ Memcached
 Memcached is a high-performance, distributed memory object caching system intended for use in 
 speeding up dynamic web applications by alleviating database load.
 
-The Acotel Blacklist APIs use Memcached in order to improve performance:
+The Acotel Blacklist APIs use Memcached in order to improve performance.
+
+A process runs every 30 minutes checking if the cache exists. If it does not exist, then it is 
+recreated:
 
 .. image:: _static/flow_memcached.png
 
-When deleting a customer (using the Delete API or the Admin Interface), this cache is deleted
-and recreated on the next request.
+When deleting a customer (using the Delete API or the Admin Interface), only this customer is 
+removed from the cache. The same happens when creating a new customer; this new customer is added
+immediately to the cache.
 
 Actions
 =======
