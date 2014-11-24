@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand
-from django.core.cache import cache
+
+from core import services
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        cache.clear()
-        print 'Cache is now clear!'
+        services.populate_memcached()

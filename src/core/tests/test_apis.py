@@ -13,7 +13,7 @@ from core import models
 
 class TestFull(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -38,7 +38,7 @@ class TestFull(TestCase):
 
 class TestListCustomers(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -46,7 +46,6 @@ class TestListCustomers(TestCase):
     @freeze_time('2014-11-10 13:00:00')
     def test_list(self):
         models.Customer.objects.create(msisdn=self.msisdn, created_by=self.user)
-        cache.delete('blacklist')
 
         response = self.client.get(reverse('customer-list'))
 
@@ -66,15 +65,15 @@ class TestListCustomers(TestCase):
 
 class TestRetrieveCustomer(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
     @freeze_time('2014-11-10 13:00:00')
     def test_msisdn_is_blacklisted(self):
-        models.Customer.objects.create(msisdn=self.msisdn, created_by=self.user)
-        cache.delete('blacklist')
+        customer = models.Customer.objects.create(msisdn=self.msisdn, created_by=self.user)
+        cache.set(self.msisdn, customer, None)
 
         response = self.client.get(reverse('customer-detail', kwargs={'msisdn': self.msisdn}))
 
@@ -95,12 +94,12 @@ class TestRetrieveCustomer(TestCase):
         self.assertEqual(response.content, '')
 
     def tearDown(self):
-        cache.delete('blacklist')
+        cache.clear()
 
 
 class TestCreateCustomer(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -135,7 +134,7 @@ class TestCreateCustomer(TestCase):
 
 class TestDeleteCustomer(TestCase):
     def setUp(self):
-        self.msisdn = '21981527318'
+        self.msisdn = '5521981527318'
         self.user = User.objects.create_user('foo bar')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)

@@ -13,21 +13,7 @@ from core import models, serializers
 logger = logging.getLogger(__name__)
 
 
-class MemcachedMixin(object):
-    def dispatch(self, request, *args, **kwargs):
-        data = cache.get('blacklist')
-        if data is None:
-            logger.info('Blacklist is not cached. Retrieving updated blacklist to set cache ...')
-            data = models.Customer.objects.all().select_related().order_by('-date_inserted')
-
-            logger.info('Setting cache ...')
-            cache.set('blacklist', data)
-
-        self.queryset = data
-        return super(MemcachedMixin, self).dispatch(request, *args, **kwargs)
-
-
-class CustomerListCreateView(MemcachedMixin, APIView):
+class CustomerListCreateView(APIView):
     """
     Allows client applications to list all customers currently blacklisted and also add new
     customers to the blacklist
@@ -43,7 +29,9 @@ class CustomerListCreateView(MemcachedMixin, APIView):
         if not page_size:
             page_size = settings.REST_FRAMEWORK['PAGINATE_BY']
 
-        paginator = Paginator(self.queryset, page_size)
+        queryset = models.Customer.objects.select_related().all()
+
+        paginator = Paginator(queryset, page_size)
         try:
             page_content = paginator.page(page)
         except PageNotAnInteger:
@@ -72,12 +60,13 @@ class CustomerListCreateView(MemcachedMixin, APIView):
                 customer,
                 context={'request': request}
             )
-            cache.delete('blacklist')
+
+            cache.set(str(customer.msisdn), customer, None)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CustomerRetrieveDestroyView(MemcachedMixin, APIView):
+class CustomerRetrieveDestroyView(APIView):
     """
     Allows client applications to retrieve and delete a specific customer by its MSISDN
     """
@@ -87,15 +76,21 @@ class CustomerRetrieveDestroyView(MemcachedMixin, APIView):
 
         msisdn = kwargs['msisdn']
 
-        logger.info('Retrieving customer info (customer id: %s) ...' % (msisdn,))
+        logger.info('Retrieving customer from cache ...')
 
-        queryset = [customer for customer in self.queryset if customer.msisdn == int(msisdn)]
-
-        try:
-            content = queryset[0]
-            serializer = serializers.CustomerSerializer(content, context={'request': request})
+        customer = cache.get(msisdn)
+        if customer:
+            serializer = serializers.CustomerSerializer(customer, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except IndexError:
+        else:
+            cache_up = cache.get('live')
+            if not cache_up:
+                try:
+                    customer = models.Customer.objects.select_related().get(msisdn=msisdn)
+                    serializer = serializers.CustomerSerializer(customer, context={'request': request})
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                except models.Customer.DoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, *args, **kwargs):
@@ -116,6 +111,6 @@ class CustomerRetrieveDestroyView(MemcachedMixin, APIView):
             history_changed_by=request.user
         )
 
-        logger.info('Deleting blacklist from memcached ...')
-        cache.delete('blacklist')
+        logger.info('Deleting msisdn from memcached ...')
+        cache.delete(msisdn)
         return Response(status=status.HTTP_204_NO_CONTENT)

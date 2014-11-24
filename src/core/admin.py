@@ -13,12 +13,13 @@ class CustomerAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
-        cache.delete('blacklist')
         obj.save()
+        cache.set(str(obj.msisdn), obj, None)
 
     def delete_selected(modeladmin, request, queryset):
         for obj in queryset:
             obj.delete()
+            cache.delete(obj.msisdn)
             models.CustomerHistory.objects.create(
                 msisdn=obj.msisdn,
                 created_by=obj.created_by,

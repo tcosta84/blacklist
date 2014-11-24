@@ -5,7 +5,8 @@ from core import validators
 
 
 class Customer(models.Model):
-    msisdn = models.BigIntegerField(unique=True, validators=[validators.validate_msisdn])
+    msisdn = models.BigIntegerField(unique=True, validators=[validators.validate_msisdn],
+            help_text='55 + DDD + Number')
     created_by = models.ForeignKey(User, related_name='created_by', editable=False)
     date_inserted = models.DateTimeField(auto_now_add=True)
 

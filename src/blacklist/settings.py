@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from celery.schedules import crontab
 from decouple import config
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
@@ -89,7 +90,7 @@ DATABASES = {'default': dj_database_url.config(default=config('DATABASE_URL'))}
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -122,8 +123,8 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'page_size',
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
@@ -165,6 +166,13 @@ LOGGING = {
             'formatter': 'standard',
             'filters': ['core_filter'],
         },
+        'file_tasks': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': LOGGING_ROOT + '/celery.log',
+            'formatter': 'standard',
+            'filters': ['core_filter'],
+        },
     },
     'loggers': {
         'django.request': {
@@ -177,9 +185,26 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'core.tasks': {
+            'handlers': ['file_tasks'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     },
 }
 
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Acotel Blacklist'
+}
+
+# Celery Beat
+
+BROKER_URL = config('RABBITMQ_URL')
+
+CELERYBEAT_SCHEDULE = {
+    'populate_memcached': {
+        'task': 'core.tasks.populate_memcached',
+        'schedule': crontab(minute='*/30'),  # Every 30 minutes
+        'args': (),
+    },
 }
