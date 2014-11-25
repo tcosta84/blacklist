@@ -27,6 +27,8 @@ postgres_pg_hba_custom:
 
 rabbitmq_management_plugin: true
 rabbitmq_remove_guest_user: true
+rabbitmq_host: localhost
+rabbitmq_port: 5672
 rabbitmq_admin_user: admin
 rabbitmq_admin_pass: 12345
 rabbitmq_app_user: blacklist
