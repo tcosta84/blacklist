@@ -13,10 +13,11 @@ class CustomerAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
+        cache.delete(str(obj.msisdn))
         obj.save()
         cache.set(str(obj.msisdn), obj, None)
 
-    def delete_selected(modeladmin, request, queryset):
+    def delete_selected(self, request, queryset):
         for obj in queryset:
             obj.delete()
             cache.delete(obj.msisdn)
