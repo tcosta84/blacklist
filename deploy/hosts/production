@@ -1,13 +1,13 @@
 [webservers]
-104.131.28.127
 
 [dbservers]
-104.131.28.127
 
 [memcachedservers]
-104.131.28.127
+
+[rabbitmqservers]
 
 [production:children]
-webservers
 dbservers
 memcachedservers
+rabbitmqservers
+webservers

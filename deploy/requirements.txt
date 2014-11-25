@@ -1,0 +1,8 @@
+tcosta84.djangoapp
+tcosta84.memcached
+tcosta84.nginx
+tcosta84.postgres
+tcosta84.python
+tcosta84.rabbitmq
+tcosta84.supervisor
+tcosta84.yum

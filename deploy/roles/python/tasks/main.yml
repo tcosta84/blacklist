@@ -1,5 +1,0 @@
----
-
-- include: install_python.yml
-- include: install_setuptools.yml
-- include: install_pip.yml

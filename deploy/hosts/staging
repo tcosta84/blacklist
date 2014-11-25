@@ -1,13 +1,17 @@
 [webservers]
-192.168.33.10
+104.131.96.178
 
 [dbservers]
-192.168.33.10
+104.131.96.178
 
 [memcachedservers]
-192.168.33.10
+104.131.96.178
+
+[rabbitmqservers]
+104.131.96.178
 
 [staging:children]
-webservers
 dbservers
 memcachedservers
+rabbitmqservers
+webservers

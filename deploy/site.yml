@@ -1,24 +1,29 @@
 ---
 
-- hosts: all
-  remote_user: root
-  roles:
-    - common
-
+# - hosts: all
+#   remote_user: root
+#   roles:
+#     - common
+#
 - hosts: dbservers
   remote_user: root
   roles:
-    - postgres
+    - tcosta84.postgres
 
 - hosts: memcachedservers
   remote_user: root
   roles:
-    - memcached
+    - tcosta84.memcached
+
+- hosts: rabbitmqservers
+  remote_user: root
+  roles:
+    - tcosta84.rabbitmq
 
 - hosts: webservers
   remote_user: root
   roles:
-    - python
-    - supervisor
-    - nginx
-    - web
+    - tcosta84.python
+    - tcosta84.supervisor
+    - tcosta84.nginx
+    - tcosta84.djangoapp
