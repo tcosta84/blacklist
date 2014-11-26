@@ -50,6 +50,7 @@ Create a .env text file next to the manage.py file in the form:::
     STATIC_ROOT=/static/
     MEDIA_ROOT=/media/
     LOGGING_ROOT=/tmp/
+    ALLOWED_HOSTS=*
 
 It's recommended you generate your own unique SECRET_KEY.
 You can do this using the Python interactive interpreter. Just run the command .manage.py shell 
@@ -86,7 +87,7 @@ Testing
 You are required to write unit tests for every change you make.
 Also make sure you run the test suite before commiting your changes to the repository:::
 
-    ./manage.py test
+    py.test
 
 Coverage
 --------
@@ -95,13 +96,13 @@ Code coverage describes how much source code has been tested. It shows which par
 are being exercised by tests and which are not.
 
 To run your tests and also collect coverage data of the executed files, run the following from 
-your project folder containing manage.py:::
+your project folder:::
 
-    coverage run --source='.' manage.py test core
+    py.test --cov=core --cov-report=html
 
-Now you can see a report of this data by typing following command:::
+Now you can see a report of this data on your browser:::
     
-    coverage report
+    open htmlcov/index.html
 
 You should aim a 100% coverage for every file you create/change, as much as possible.
 

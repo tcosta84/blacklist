@@ -15,4 +15,5 @@ python-decouple
 mock==1.0.1
 celery==3.1.16
 flower==0.7.3
-coverage==3.7.1
+pytest-django==2.7.0
+pytest-cov==1.8.1
