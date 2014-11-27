@@ -18,6 +18,9 @@ class TestPopulateMemcached(TestCase):
         e = Exception('Boom')
         service.side_effect = e
 
-        tasks.populate_memcached()
+        try:
+            tasks.populate_memcached()
+        except:
+            pass
 
         task_retry.assert_called_with(exc=e, countdown=10)

@@ -14,5 +14,5 @@ def populate_memcached(self):
         services.populate_memcached()
     except Exception as e:
         logger.error('Error [%s]. Retrying ...' % (e, ))
-        self.retry(exc=e, countdown=10)
+        raise self.retry(exc=e, countdown=10)
     logger.info('End task')
