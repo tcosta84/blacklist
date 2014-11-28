@@ -34,7 +34,7 @@ class CustomerHistory(models.Model):
     history_date_inserted = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return '%s' % (self.id, )
+        return '%s, %s' % (self.msisdn, self.get_action_display())
 
     class Meta:
         verbose_name_plural = 'Customer Histories'
